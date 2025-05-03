@@ -1,27 +1,48 @@
 [
-  {
-    "nome": "Forno",
-    "consumo": 2,
-    "acceso": false
-  },
-  {
-    "nome": "Lavatrice",
-    "consumo": 1.2,
-    "acceso": false
-  },
-  {
-    "nome": "Asciugatrice",
-    "consumo": 1.5,
-    "acceso": false
-  },
-  {
-    "nome": "Climatizzatore",
-    "consumo": 0.9,
-    "acceso": false
-  },
-  {
-    "nome": "Lavastoviglie",
-    "consumo": 1.3,
-    "acceso": false
-  }
-]
+    {
+      "nome": "Forno",
+      "consumo": 1.0,
+      "acceso": false
+    },
+    {
+      "nome": "Lavatrice",
+      "consumo": 1.2,
+      "acceso": false
+    },
+    {
+      "nome": "Asciugatrice",
+      "consumo": 1.5,
+      "acceso": false
+    },
+    {
+      "nome": "Climatizzatore (nuovo)",
+      "consumo": 1.0,
+      "acceso": false
+    },
+    {
+      "nome": "Climatizzatore (nuovo)",
+      "consumo": 1.0,
+      "acceso": false
+    },
+    {
+      "nome": "Climatizzatore (vecchio)",
+      "consumo": 1.5,
+      "acceso": false
+    },
+    {
+      "nome": "Lavastoviglie",
+      "consumo": 1.3,
+      "acceso": false
+    },
+    {
+      "nome": "Asciuga capelli (efficiente)",
+      "consumo": 0.9,
+      "acceso": false
+    },
+    {
+      "nome": "scalda bagno",
+      "consumo": 1.0,
+      "acceso": false
+    }
+  ]
+  

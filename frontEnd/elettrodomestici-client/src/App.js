@@ -4,6 +4,8 @@ import './App.css'; // Assicurati di avere il CSS caricato
 function App() {
   const [appliances, setAppliances] = useState([]);
   const [socket, setSocket] = useState(null);
+  const [showAlertGif, setShowAlertGif] = useState(false);  // Stato per la GIF
+
 
   useEffect(() => {
     const ws = new WebSocket('ws://25.45.24.31:3001');
@@ -16,6 +18,11 @@ function App() {
       }
       if (message.type === 'alert') {
         alert(message.message);
+        setShowAlertGif(true);
+
+        setTimeout(() => {
+          setShowAlertGif(false);
+        }, 3000);
       }
     };
 
@@ -32,6 +39,11 @@ function App() {
   return (
     <div className="container">
       <h1>🌺 Ohana Elettrodomestici 🌺</h1>
+      {showAlertGif && (
+        <div style={{ position: 'absolute', top: '10%', left: '50%', transform: 'translateX(-50%)', zIndex: 100 }}>
+          <img src="https://c.tenor.com/zZM2TSG7Zl0AAAAd/tenor.gif" alt="Alert GIF" width="400" />
+        </div>
+      )}
       <table>
         <thead>
           <tr>
