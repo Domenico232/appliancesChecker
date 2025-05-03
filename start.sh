@@ -9,7 +9,7 @@ cd ..
 
 # Avvia frontend React
 echo "Avvio del frontend React..."
-cd frontend
+cd frontEnd
 cd elettrodomestici-client
 
 # Imposta l'host per accettare connessioni dalla rete locale
