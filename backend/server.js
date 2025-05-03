@@ -8,7 +8,24 @@ const app = express();
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
+const os = require('os');
+
+// Funzione per ottenere l'indirizzo IP locale
+function getLocalIp() {
+  const interfaces = os.networkInterfaces();
+  for (const iface of Object.values(interfaces)) {
+    for (const config of iface) {
+      if (config.family === 'IPv4' && !config.internal) {
+        return config.address;
+      }
+    }
+  }
+  return 'localhost';
+}
+
+
 // Carica gli elettrodomestici dal file JSON all'avvio
+let totalConsumption = 0;
 let appliances = [];
 const appliancesFilePath = path.join(__dirname, 'appliances.json');
 
@@ -36,6 +53,20 @@ function saveAppliances() {
     fs.writeFileSync(appliancesFilePath, JSON.stringify(appliances, null, 2));
   } catch (err) {
     console.error('Errore nel salvare il file degli elettrodomestici:', err);
+  }
+}
+
+// Funzione per inviare un avviso se il consumo supera i 3 kW
+function checkForAlert() {
+  let totalConsumption = 0;
+    appliances.forEach(appliance => {
+    if (appliance.acceso) {
+      totalConsumption += appliance.consumo;
+    }
+    });
+
+  if (totalConsumption > 3) {
+    broadcast({ type: 'alert', message: 'Attenzione: consumo totale superiore a 3 kW!' });
   }
 }
 
@@ -70,11 +101,15 @@ wss.on('connection', (ws) => {
       appliances = appliances.map(appl =>
         appl.nome === parsed.nome ? { ...appl, acceso: !appl.acceso } : appl
       );
-      
+
       // Salva lo stato nel file JSON ogni volta che un elettrodomestico viene cambiato
       saveAppliances();
       
+      // Verifica e invia un avviso se necessario
+      checkForAlert();
+      
       broadcast({ type: 'state', data: appliances });
+      broadcast({ type: 'consumes', message: `${parsed.nome}` });
     }
   });
 
@@ -82,8 +117,8 @@ wss.on('connection', (ws) => {
     console.log('Client disconnesso');
   });
 });
-
+const localIp = getLocalIp();
 const PORT = 3001;
-server.listen(PORT, () => {
-  console.log(`Backend in ascolto su http://localhost:${PORT}`);
-});
+server.listen(PORT, '0.0.0.0', () => {
+    console.log(`Backend in ascolto su http://${localIp}:${PORT}`);
+  });
