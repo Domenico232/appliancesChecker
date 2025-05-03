@@ -8,7 +8,7 @@ function App() {
 
 
   useEffect(() => {
-    const ws = new WebSocket('ws://25.45.24.31:3001');
+    const ws = new WebSocket('ws://192.168.1.62:3001');
     ws.onopen = () => console.log('Connesso al WebSocket');
 
     ws.onmessage = (event) => {
