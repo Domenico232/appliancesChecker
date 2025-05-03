@@ -1,0 +1,27 @@
+[
+  {
+    "nome": "Forno",
+    "consumo": 2,
+    "acceso": true
+  },
+  {
+    "nome": "Lavatrice",
+    "consumo": 1.2,
+    "acceso": false
+  },
+  {
+    "nome": "Asciugatrice",
+    "consumo": 1.5,
+    "acceso": false
+  },
+  {
+    "nome": "Climatizzatore",
+    "consumo": 0.9,
+    "acceso": true
+  },
+  {
+    "nome": "Lavastoviglie",
+    "consumo": 1.3,
+    "acceso": false
+  }
+]

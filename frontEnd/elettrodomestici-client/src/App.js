@@ -1,56 +1,53 @@
 import React, { useEffect, useState } from 'react';
 
-const socket = new WebSocket('ws://localhost:3001');
-
-export default function App() {
+function App() {
   const [appliances, setAppliances] = useState([]);
+  const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    socket.onopen = () => {
-      console.log('WebSocket connected');
+    const ws = new WebSocket('ws://localhost:3001');
+    
+    ws.onopen = () => {
+      console.log('Connesso al WebSocket');
     };
 
-    socket.onmessage = (event) => {
-      const msg = JSON.parse(event.data);
-      if (msg.type === 'state') {
-        setAppliances(msg.data);
+    ws.onmessage = (event) => {
+      const message = JSON.parse(event.data);
+      if (message.type === 'state') {
+        setAppliances(message.data);  // Aggiorna lo stato con i dati ricevuti
+      }
+      if (message.type === 'state') {
+        alert(message.message);  // Aggiorna lo stato con i dati ricevuti
       }
     };
 
+    setSocket(ws);
+
     return () => {
-      socket.close();
+      ws.close();
     };
   }, []);
 
+  // Funzione per cambiare lo stato di un elettrodomestico
   const toggleAppliance = (nome) => {
-    socket.send(JSON.stringify({ type: 'toggle', nome }));
+    if (socket) {
+      socket.send(JSON.stringify({
+        type: 'toggle',
+        nome
+      }));
+    }
   };
 
-  const totalPower = appliances
-    .filter(a => a.acceso)
-    .reduce((sum, a) => sum + a.consumo, 0);
-
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center p-6">
-      <h1 className="text-3xl font-bold mb-4">Monitor Elettrodomestici</h1>
-      <p className="text-lg mb-2">Consumo totale: <strong>{totalPower.toFixed(2)} kW</strong></p>
-      {totalPower > 3 && (
-        <div className="bg-red-200 text-red-800 font-semibold p-2 rounded">
-          ⚠️ Superato il limite di 3 kW!
-        </div>
-      )}
-      <ul className="mt-4 w-full max-w-md space-y-2">
-        {appliances.map(appl => (
-          <li
-            key={appl.nome}
-            className="flex justify-between items-center bg-white p-3 rounded shadow"
-          >
-            <span>{appl.nome} ({appl.consumo} kW)</span>
-            <button
-              onClick={() => toggleAppliance(appl.nome)}
-              className={`px-4 py-1 rounded text-white ${appl.acceso ? 'bg-green-600' : 'bg-gray-400'}`}
-            >
-              {appl.acceso ? 'Acceso' : 'Spento'}
+    <div>
+      <h1>Stato Elettrodomestici</h1>
+      <ul>
+        {appliances.map((appliance) => (
+          <li key={appliance.nome}>
+            <span>{appliance.nome}</span> - 
+            <span>{appliance.acceso ? 'Acceso' : 'Spento'}</span>
+            <button onClick={() => toggleAppliance(appliance.nome)}>
+              {appliance.acceso ? 'Acceso' : 'Spento'}
             </button>
           </li>
         ))}
@@ -58,4 +55,6 @@ export default function App() {
     </div>
   );
 }
+
+export default App;
 
